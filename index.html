@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Bob Hartwig">
+    <meta name="copyright" content="Bob Hartwig" />
+
+    <title>Cellular Automata</title>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            border: 0;
+            overflow: hidden; /*  Disable scrollbars */
+            display: block;  /* No floating content on sides */
+        }
+    </style>
+
+</head>
+
+<body>
+
+<canvas id="cellularAutomataCanvas" width="200" height="100"></canvas>
+<script>
+    var canvas = document.getElementById("cellularAutomataCanvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var canvasContext = canvas.getContext("2d");
+    canvasContext.fillStyle = "#808080";
+
+    var rule = 150;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var currentRow = [];
+    for (i=0;i<width;i++)
+        currentRow.push(Math.random()<.5);
+    currentRow.push(false);
+    console.info(currentRow);
+    for (y=0;y<height;y++)
+    {
+        nextRow = [];
+        for (x=0;x<width;x++)
+        {
+            if(currentRow[x])
+                canvasContext.fillRect(x, y, 1, 1);
+            var bitPosition = 0;
+            if (currentRow[x + 1]) bitPosition = bitPosition + 1;
+            if (currentRow[x + 0]) bitPosition = bitPosition + 2;
+            if (x > 0)
+                if (currentRow[x - 1]) bitPosition = bitPosition + 4;
+            nextRow.push(((rule >> bitPosition) & 1) > 0);
+        }
+        currentRow = nextRow;
+    }
+</script>
+</body>
+</html>
